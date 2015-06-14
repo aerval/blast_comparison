@@ -7,7 +7,7 @@ class BlastHit(object):
     
     def __init__(self, hit):
         '''
-        Notice: some of the properties included here do not appear in the short tabular BLAST representation. If one would adapt the program to also work with that kind of data, all the properties of higher hit indices (from hit[13]?) would be exluded. Note that you would also need to adjust compareHit function to only check the primary properties and further that this would mask hits with changes in the description as it is not included in the short tabular format.
+        Notice: some of the properties included here do not appear in the short tabular BLAST representation. If one would adapt the program to also work with that kind of data, all the properties of higher hit indices (from hit[13]?) would be exluded. Note that you would also need to adjust compareHit function to only check the primary properties (and further that this would mask hits with changes in the description as it is not included in the short tabular format).
         '''
         
         self.raw = hit
@@ -30,12 +30,12 @@ class BlastHit(object):
         
         
         self.name = hit[0]
-        self.desc = hit[25]
+        # self.desc = hit[25] # only in 25/26 column tabular BLAST file, very unofficial
         self.length =  hit[3]
         
         self.score = hit[13]
         self.e_value = hit[10]
-        self.bit_score = hit[11]
+        # self.bit_score = hit[11] # problematic due to 12261 != 1.226e04 -> this can appear probably at many places but here i detected it / take out because very similar to evalue
         self.identities = hit[14]
         self.positives = hit[15]
         self.gaps = hit[16]
@@ -51,46 +51,41 @@ class BlastHit(object):
     
     def compareHit(self, other, check_ids = True):
         '''
-        Returns true in those cases where only eValue or description may be deviating and every other stat is equal
+        Returns true in those cases where only eValue (or description) may be deviating and every other stat is equal
         
         compare = the BlastHit the current hit is compared to
         check_ids = wether the comparison should also look for the same ids. It sometimes happens that a database entree is updated with new information while the basic properties do not changes (and therefore also not the hit charateristics). Check_ids = True therefore checks for Ids as well while = False ignores it.
         '''
         differences = []
         
-        if self.score != other.score:
+        #elif self.bit_score != other.bit_score: #should be the same as score
+        #   return False, None                   # -> see above
+        if check_ids and not self.ids == other.ids:
             return False, None
-        elif self.bit_score != other.bit_score: #should be the same as score
+        elif self.query_start != other.query_start:
             return False, None
-        elif self.identities != other.identities:
-            return False, None
-        elif self.positives != other.positives:
-            return False, None
-        elif self.gaps != other.gaps:
+        elif self.subject_start != other.subject_start:
             return False, None
         elif self.qframe != other.qframe:
             return False, None
         elif self.sframe != other.sframe:
             return False, None
-        elif self.query != other.query:
-            return False, None
-        elif self.query_start != other.query_start:
-            return False, None
-        elif self.mismatch != other.mismatch:
-            return False, None
-        elif self.subject != other.subject:
-            return False, None
-        elif self.subject_start != other.subject_start:
-            return False, None
-        elif check_ids and not self.ids == other.ids:
-            return False, None
+        elif [letter for letter in self.query if letter in ['A', 'C', 'G', 'T']] != [letter for letter in other.query if letter in ['A', 'C', 'G', 'T']]:
+            return False, None                  # this is due to alignment differences like 'C-T' != 'CT-' which come from changes in alignment algorithm
+        elif [letter for letter in self.subject if letter in ['A', 'C', 'G', 'T']] != [letter for letter in other.subject if letter in ['A', 'C', 'G', 'T']]:
+            return False, None                  # see above "query"
         else:
             # check for smaller differencens (these are database changes that do not directly change the hit
             # for example, when the database becomes bigger, this make different (hit) cases more likely. The reason why these are nevertheless checked is to clarify that these are no perfect hits and therefore line by line comparison would not find this (also, a slightly higher e-Value might lead to exclusion from the BLAST algorithm) 
-            if self.desc != other.desc:
-                differences.append('description')
+            '''if self.desc != other.desc:
+                differences.append('description')''' # taken out as this is part of the 26 column tabular files
             if self.e_value != other.e_value:
                 differences.append('eValue')
+                
+            # changes in alignment (due to internal changes in BLAST like "CTGC" and "CATC" as gapless alignment or "C-TGC" and "CAT-C")
+            if self.identities != other.identities or self.query != other.query or self.subject != other.subject or self.score != other.score or self.positives != other.positives or self.gaps != other.gaps or self.mismatch != other.mismatch:
+                differences.append('alignment')
+            
 
         return True, differences
         
@@ -122,7 +117,7 @@ class GeneId(object):
     
 def compareBLASTs(blastA, blastB):
     '''
-    compare two lists of BlastHits. Returns two dictionaries that devide each lists in the BlastHits that appear in both lists ('same'), that appear with slight changes (in description or eValue) in both lists ('similar') and the Hits that appear in only one list ('unknown')
+    compare two lists of BlastHits. Returns two dictionaries that devide each lists in the BlastHits that appear in both lists ('same'), that appear with slight changes (in [description or] eValue) in both lists ('similar') and the Hits that appear in only one list ('unknown')
     '''
     
     hitsA = {'same':[], 'similar':[], 'unknown':[], 'all':list(blastA)}# the all list is inserted as copy to prevent overwriting
@@ -147,7 +142,7 @@ def compareBLASTs(blastA, blastB):
                 blastB.pop(num)
                 break 
                 '''NOTICE: this assumes that there is only one matching hit in the other
-                BLAST Search. As long as only description and eValue count as possible 
+                BLAST Search. As long as only (description and) eValue count as possible 
                 differences this is acceptable (because very unlikely since basically 
                 impossible) but might get problematic as soon as other properties are 
                 seen as optional'''

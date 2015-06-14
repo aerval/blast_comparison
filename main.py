@@ -14,6 +14,7 @@ from __future__ import print_function
 from time import strptime # convert string into time object
 import optparse # commandline parsing
 from BlastHit import * # BlastHit.py file
+import string # for valid letters in filename
 
 def loadBlastHits(file):
     '''
@@ -23,7 +24,18 @@ def loadBlastHits(file):
     '''
 
     blastfile = open(file).readlines()
-    return [BlastHit(hit) for hit in blastfile]
+    hits = []
+    #we can not extract every line from the tabular file into a single hit since some correspont to multiple such hits
+    for hit in blastfile:
+        h = hit.split('\t')
+        if h[1] == h[12]:
+            hits.append(BlastHit(hit))
+        else: # when multiple gene ids contribute to the same alignment, they can be summarized to one hit. In the following we split these up because we want to check all hit seperately
+            subhits = h[12].split(';')
+            for sub in subhits:
+                h[1] = sub
+                hits.append(BlastHit('\t'.join(h)))
+    return hits
     
 class CompareBLASTs(object):
     
@@ -120,19 +132,21 @@ class CompareBLASTs(object):
         
         hits_per_category = {'equal' : 0, 'similar' : 0, 'live' : 0, 'replaced' : 0, 'suppressed' : 0, 'new' : 0, 'strange' : 0}
         
-        if top == 0:
-            top = min(len(self.old_hits['all']), len(self.new_hits['all']))
-        
-        for hit in self.old_hits['all'][:top]:
+        if top == 0: #count all hits
+            top_old, top_new = len(self.old_hits['all']), len(self.new_hits['all'])
+        else: #count only the specified fraction of hits
+            top_old, top_new = min(top, len(self.old_hits['all'])), min(top, len(self.new_hits['all']))
+       
+        for hit in self.old_hits['all'][:top_old]:
             hits_per_category[hit.status] += 1
-        for hit in self.new_hits['all'][:top]:
+        for hit in self.new_hits['all'][:top_new]:
             if hit.status in ['new', 'strange']:
                 hits_per_category[hit.status] += 1
                      
                 
         if long_output:
             category_names = {'equal' : 'Found in both BLASTs results:\t%i',
-                        'similar' : 'Found in both BLASTs results with slight changes in eValue or description:\t%i',
+                        'similar' : 'Found in both BLASTs results with slight changes:\t%i',
                         'live' : 'Not showing up for unknown reasons in the second BLAST (probably low scores):\t%i',
                         'replaced' : 'Replaced/updated before the second BLAST:\t%i',
                         'suppressed' : 'Deleted/suppressed before the second BLAST:\t%i',
@@ -157,7 +171,7 @@ class CompareBLASTs(object):
                 output('Total Hits from old search:\t%i' % len(self.old_hits['all']) )
                 output('Total Hits from new search:\t%i' % len(self.new_hits['all']) )
 
-                if top != len(self.old_hits['all']):
+                if top_old != len(self.old_hits['all']) and top_new != len(self.new_hits['all']):
                     output('Among the top %i hits were:' %top)
                 else:
                     output('From all hits were:')
@@ -178,6 +192,11 @@ class CompareBLASTs(object):
         '''
         
         categories = categories.split(',')
+        
+        #generate valid filenames:
+        valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+        name = ''.join(c for c in self.name if c in valid_chars)
+        
         for category in categories:
             hits = None
             if category == 'new':
@@ -186,20 +205,24 @@ class CompareBLASTs(object):
                 hits = self.old_hits['same']
             if category == 'similar':
                 hits = self.old_hits['similar']
-            if category == 'lost':
+            if category == 'live':
                 hits = self.old_hits['lost']
             if category == 'replaced':
-                hits = self.old_hits['replaced']
+                hits = self.old_hits['replacement']
             if category == 'suppressed':
                 hits = self.old_hits['suppressed']
             if category == 'all_old':
                 hits = self.old_hits['all']
             if category == 'all_new':
                 hits = self.new_hits['all']
+            if category == 'strange':
+                hits = self.new_hits['old']
             if hits:
-                with open(path + self.name + '_' + category + '.blast', 'w+') as f: # the query name and category speciefies the file name (e.g. Query7_all_new.blast)
+                with open(path + name + '_' + category + '.blast', 'w+') as f: # the query name and category speciefies the file name (e.g. Query7_all_new.blast)
                     for hit in hits:
                         f.write(str(hit) + '\n')
+            else:
+                print("Unknown export category %s" % category)
 
 def performComparison(opts):
     '''
