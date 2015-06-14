@@ -6,6 +6,6 @@ First search was performed with MegaBLAST on the dutch [Andromeda Server](http:/
 
 The results were obtained from running the main.py script via the command line:
 
-´´´bash
+```bash
 python main.py -o ebola_old.tabular -n ebola_new.tabular -Al -s result.txt
-´´´
+```
