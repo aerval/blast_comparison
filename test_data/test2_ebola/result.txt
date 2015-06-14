@@ -1,0 +1,91 @@
+Query:	gb:KR063671:469-2688|Organism:Zaire
+Total Hits from old search:	44
+Total Hits from new search:	151
+From all hits were:
+Found in both BLASTs results:	28
+Found in both BLASTs results with slight changes:	16
+Not showing up for unknown reasons in the second BLAST (probably low scores):	0
+Replaced/updated before the second BLAST:	0
+Deleted/suppressed before the second BLAST:	0
+New hits added to the database for the second BLAST:	107
+Hits that do only appear in the second BLAST that should have appeared in the first:	0
+
+
+Query:	gb:KR063671:11580-18218|Organism:Zaire
+Total Hits from old search:	44
+Total Hits from new search:	153
+From all hits were:
+Found in both BLASTs results:	31
+Found in both BLASTs results with slight changes:	13
+Not showing up for unknown reasons in the second BLAST (probably low scores):	0
+Replaced/updated before the second BLAST:	0
+Deleted/suppressed before the second BLAST:	0
+New hits added to the database for the second BLAST:	109
+Hits that do only appear in the second BLAST that should have appeared in the first:	0
+
+
+Query:	gb:KR063671:10344-11099|Organism:Zaire
+Total Hits from old search:	30
+Total Hits from new search:	136
+From all hits were:
+Found in both BLASTs results:	30
+Found in both BLASTs results with slight changes:	0
+Not showing up for unknown reasons in the second BLAST (probably low scores):	0
+Replaced/updated before the second BLAST:	0
+Deleted/suppressed before the second BLAST:	0
+New hits added to the database for the second BLAST:	106
+Hits that do only appear in the second BLAST that should have appeared in the first:	0
+
+
+Query:	gb:KR063671:4478-5458|Organism:Zaire
+Total Hits from old search:	31
+Total Hits from new search:	137
+From all hits were:
+Found in both BLASTs results:	31
+Found in both BLASTs results with slight changes:	0
+Not showing up for unknown reasons in the second BLAST (probably low scores):	0
+Replaced/updated before the second BLAST:	0
+Deleted/suppressed before the second BLAST:	0
+New hits added to the database for the second BLAST:	106
+Hits that do only appear in the second BLAST that should have appeared in the first:	0
+
+
+Query:	gb:KR063671:3128-4150|Organism:Zaire
+Total Hits from old search:	30
+Total Hits from new search:	136
+From all hits were:
+Found in both BLASTs results:	29
+Found in both BLASTs results with slight changes:	1
+Not showing up for unknown reasons in the second BLAST (probably low scores):	0
+Replaced/updated before the second BLAST:	0
+Deleted/suppressed before the second BLAST:	0
+New hits added to the database for the second BLAST:	106
+Hits that do only appear in the second BLAST that should have appeared in the first:	0
+
+
+Query:	gb:KR063671:8508-9374|Organism:Zaire
+Total Hits from old search:	29
+Total Hits from new search:	139
+From all hits were:
+Found in both BLASTs results:	28
+Found in both BLASTs results with slight changes:	1
+Not showing up for unknown reasons in the second BLAST (probably low scores):	0
+Replaced/updated before the second BLAST:	0
+Deleted/suppressed before the second BLAST:	0
+New hits added to the database for the second BLAST:	110
+Hits that do only appear in the second BLAST that should have appeared in the first:	0
+
+
+Query:	gb:KR063671:6038-8067|Organism:Zaire
+Total Hits from old search:	53
+Total Hits from new search:	160
+From all hits were:
+Found in both BLASTs results:	43
+Found in both BLASTs results with slight changes:	10
+Not showing up for unknown reasons in the second BLAST (probably low scores):	0
+Replaced/updated before the second BLAST:	0
+Deleted/suppressed before the second BLAST:	0
+New hits added to the database for the second BLAST:	107
+Hits that do only appear in the second BLAST that should have appeared in the first:	0
+
+
