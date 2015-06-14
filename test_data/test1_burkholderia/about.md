@@ -4,6 +4,6 @@ This test is from a BLAST search that was performed by Damion Dooley with the Ga
 
 The results were obtained from running the main.py script via the command line:
 
-´´´bash
+```bash
 python main.py -o burkholderia_old.tabular -n burkholderia_new.tabular -Al -s result.txt
-´´´
+```
