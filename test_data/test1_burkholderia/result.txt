@@ -1,0 +1,63 @@
+Query:	Assembly_67_BCC6_consensus_sequence_primers_removed
+Total Hits from old search:	675
+Total Hits from new search:	689
+From all hits were:
+Found in both BLASTs results:	289
+Found in both BLASTs results with slight changes:	307
+Not showing up for unknown reasons in the second BLAST (probably low scores):	77
+Replaced/updated before the second BLAST:	1
+Deleted/suppressed before the second BLAST:	1
+New hits added to the database for the second BLAST:	92
+Hits that do only appear in the second BLAST that should have appeared in the first:	0
+
+
+Query:	Assembly_67_BCC9_consensus_sequence_primers_removed
+Total Hits from old search:	491
+Total Hits from new search:	500
+From all hits were:
+Found in both BLASTs results:	194
+Found in both BLASTs results with slight changes:	211
+Not showing up for unknown reasons in the second BLAST (probably low scores):	84
+Replaced/updated before the second BLAST:	1
+Deleted/suppressed before the second BLAST:	1
+New hits added to the database for the second BLAST:	94
+Hits that do only appear in the second BLAST that should have appeared in the first:	0
+
+
+Query:	Assembly_67_BCC8_consensus_sequence_primers_removed
+Total Hits from old search:	683
+Total Hits from new search:	694
+From all hits were:
+Found in both BLASTs results:	262
+Found in both BLASTs results with slight changes:	336
+Not showing up for unknown reasons in the second BLAST (probably low scores):	83
+Replaced/updated before the second BLAST:	1
+Deleted/suppressed before the second BLAST:	1
+New hits added to the database for the second BLAST:	95
+Hits that do only appear in the second BLAST that should have appeared in the first:	0
+
+
+Query:	Assembly_67_BCC2_consensus_sequence_primers_removed
+Total Hits from old search:	983
+Total Hits from new search:	1041
+From all hits were:
+Found in both BLASTs results:	304
+Found in both BLASTs results with slight changes:	590
+Not showing up for unknown reasons in the second BLAST (probably low scores):	86
+Replaced/updated before the second BLAST:	2
+Deleted/suppressed before the second BLAST:	1
+New hits added to the database for the second BLAST:	145
+Hits that do only appear in the second BLAST that should have appeared in the first:	0
+
+
+Query:	Assembly_67_BCC1_consensus_sequence_primers_removed
+Total Hits from old search:	500
+Total Hits from new search:	500
+From all hits were:
+Found in both BLASTs results:	194
+Found in both BLASTs results with slight changes:	225
+Not showing up for unknown reasons in the second BLAST (probably low scores):	79
+Replaced/updated before the second BLAST:	1
+Deleted/suppressed before the second BLAST:	1
+New hits added to the database for the second BLAST:	80
+Hits that do only appear in the second BLAST that should have appeared in the first:	0
