@@ -28,8 +28,11 @@ class BlastHit(object):
                 # ids and databank ids
                 num = n + 1
                 while num < len(ids):
-                    if len(ids[num]) >= 5: # very vague, it might be better to have a list of potential dbs
-                        self.ids.append(GeneId(ids[n], ids[num])) # = every id is a list containing the database and the id itself
+                    if len(ids[num]) >= 5: # very vague, it might be better to
+                        # have a list of potential dbs
+                        self.ids.append(GeneId(ids[n], ids[num]))
+                        # -> every id is a list containing the database and
+                        # the id itself
                         num += 1
                     else:
                         break
@@ -38,10 +41,10 @@ class BlastHit(object):
         self.length =  hit[3]
         self.score = hit[13]
         self.e_value = hit[10]
-        # self.bit_score = hit[11] # problematic due to 12261 != 1.226e04
-                                   # -> this can appear probably at many 
-                                   # places but here i detected it taken out 
-                                   # because very similar to e-value
+        # self.bit_score = hit[11] 
+        # -> problematic due to 12261 != 1.226e04. This can appear probably at
+        # many places but here i detected it taken out because very similar to
+        # e-value
         self.identities = hit[14]
         self.positives = hit[15]
         self.gaps = hit[16]
@@ -52,8 +55,8 @@ class BlastHit(object):
         self.mismatch = hit[4]
         self.subject = hit[21]
         self.subject_start = hit[8]      
-        self.status = '' # states whether a similar BlastHit has been found
-                         # in the other BLAST Search
+        self.status = ''
+        # states whether a similar BlastHit has been found in the other Search
     
     def compareHit(self, other, check_ids = True):
         '''

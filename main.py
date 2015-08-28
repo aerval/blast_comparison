@@ -31,9 +31,10 @@ def loadBlastHits(file):
         h = hit.split('\t')
         if h[1] == h[12]:
             hits.append(BlastHit(hit))
-        else: # when multiple gene ids contribute to the same alignment, they
-              # can be summarized to one hit. In the following we split these
-              # up because we want to check all hit seperately
+        else:
+            # when multiple gene ids contribute to the same alignment, they
+            # can be summarized to one hit. In the following we split these
+            # up because we want to check all hit seperately
             subhits = h[12].split(';')
             for sub in subhits:
                 h[1] = sub
@@ -123,7 +124,7 @@ class CompareBLASTs(object):
         # estimate the time of the old BLAST (or last used database update) 
         # search by looking for the creation of the youngest entree that match
         # to the old hits
-        date_oldsearch = max([strptime(record['CreateDate'], "%Y/%m/%d")
+        date_oldsearch = max([strptime(record['CreateDate'], '%Y/%m/%d')
                                     for record in self.oldGeneIDs.values()])
 
         # check wether all new hits with no relative in the old Search are
@@ -133,7 +134,7 @@ class CompareBLASTs(object):
         self.new_hits['old'] = []
         for hit in self.new_hits['unknown']:
             if strptime(self.newGeneIDs[hit.ids[0].num]['CreateDate'],
-                                            "%Y/%m/%d") < date_oldsearch:
+                                            '%Y/%m/%d') < date_oldsearch:
                 self.new_hits['old'].append(hit)
                 hit.status = 'strange'
             else:
