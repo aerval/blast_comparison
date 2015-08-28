@@ -58,7 +58,7 @@ class BlastHit(object):
         self.status = ''
         # states whether a similar BlastHit has been found in the other Search
     
-    def compareHit(self, other, check_ids = True):
+    def compareHit(self, other, check_ids=True):
         '''
         Returns true in those cases where only eValue (or description) may be
         deviating and every other stat is equal

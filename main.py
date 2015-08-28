@@ -141,8 +141,8 @@ class CompareBLASTs(object):
                 self.new_hits['new'].append(hit)
                 hit.status = 'new'
     
-    def outputComparison(self, output_types = [lambda x: print(x)], top = 0,
-                                        long_output = False, adaptive = True):
+    def outputComparison(self, output_types=[lambda x: print(x)], top=0,
+                                        long_output=False, adaptive=True):
         '''
         Prints (and or writes to a file) the output of the BLAST comparison
         
@@ -221,7 +221,7 @@ class CompareBLASTs(object):
             # separate from following queries        
             output('\n')
             
-    def export_hit_categories(self, categories, path = ''):
+    def export_hit_categories(self, categories, path=''):
         '''
         Exports the given categories into files (format similar to the input 
         .blast format with a status column added at the end)
@@ -332,32 +332,32 @@ if __name__ == '__main__':
     Neccessary to provide are the two tabular BLAST files old (-o) and new (-n)
     '''
 
-    op = optparse.OptionParser(usage = usage)
-    op.add_option('-o', '--old', default = None, dest = 'old_Blast', 
-                  help = 'the older tabular BLAST file (24 columns)')
-    op.add_option('-n', '--new', default = None, dest = 'new_Blast',
-                  help = 'the newer BLAST file')
-    op.add_option('-t', '--top', type = 'int', default = 0,
-                  help = 'specify when only the top X (integer value) hits for each query are of interest')
-    op.add_option('-v', '--verbose', action = 'store_true', dest = 'verbose',
-                  default = True, help = 'print everything')
-    op.add_option('-q', '--quiet', action = 'store_false', dest = 'verbose',
-                  help = 'stay quiet')
-    op.add_option('-s', '--save', default = None, dest = 'save_output', 
-                  help = 'file where the output is saved')
-    op.add_option('-p', '--put', default = '', dest = 'output_path', 
-                  help = 'the path where the saved output and/or exported hit files are stored')
-    op.add_option('-l', '--longOutput', action = 'store_true',
-                  dest = 'long_output', default = False,
-                  help = 'enable long names in the output')
-    op.add_option('-a', '--adaptive', action = 'store_true',
-                  dest = 'adaptive', default = True, 
-                  help = 'only display those hit classes, that have elements')
-    op.add_option('-A', '--notAdaptive', action = 'store_false', 
-                  dest = 'adaptive', help = 'display all elements')
-    op.add_option('-e', '--email', default = 'test@test.com',
-                  help = 'email address of the user to send him/her notice of excess use')    
-    op.add_option('-x', '--export', default = None, 
+    op=optparse.OptionParser(usage=usage)
+    op.add_option('-o', '--old', default=None, dest='old_Blast', 
+                  help='the older tabular BLAST file (24 columns)')
+    op.add_option('-n', '--new', default=None, dest='new_Blast',
+                  help='the newer BLAST file')
+    op.add_option('-t', '--top', type='int', default=0,
+                  help='specify when only the top X (integer value) hits for each query are of interest')
+    op.add_option('-v', '--verbose', action='store_true', dest='verbose',
+                  default=True, help='print everything')
+    op.add_option('-q', '--quiet', action='store_false', dest='verbose',
+                  help='stay quiet')
+    op.add_option('-s', '--save', default=None, dest='save_output', 
+                  help='file where the output is saved')
+    op.add_option('-p', '--put', default='', dest='output_path', 
+                  help='the path where the saved output and/or exported hit files are stored')
+    op.add_option('-l', '--longOutput', action='store_true',
+                  dest='long_output', default=False,
+                  help='enable long names in the output')
+    op.add_option('-a', '--adaptive', action='store_true',
+                  dest='adaptive', default=True, 
+                  help='only display those hit classes, that have elements')
+    op.add_option('-A', '--notAdaptive', action='store_false', 
+                  dest='adaptive', help='display all elements')
+    op.add_option('-e', '--email', default='test@test.com',
+                  help='email address of the user to send him/her notice of excess use')    
+    op.add_option('-x', '--export', default=None, 
                   help='export specified hit categories (Example: "-x new,old_all,suppressed", Categories: "equal, similar, live, replaced, suppressed, new, strange, all_old and all_new)"')
     
     opts, args = op.parse_args()
