@@ -67,6 +67,7 @@ class BlastHit(object):
         also not the hit charateristics). Check_ids = True therefore checks
         for Ids as well while = False ignores it.
         '''
+        
         differences = []
         
         #if self.bit_score != other.bit_score: #should be the same as score
@@ -117,7 +118,8 @@ class BlastHit(object):
         '''
         When a BLAST hit is called as a string return the orginal data and,
         if specified, the status
-        '''    
+        '''
+        
         if self.status == '':
             return self.raw
         else:
@@ -129,6 +131,7 @@ class GeneId(object):
     db = Identifier of the database (eg. 'gb')
     num = identification number of the gene in the database
     '''
+    
     def __init__(self, db, num):
         self.db = db
         self.num = num
