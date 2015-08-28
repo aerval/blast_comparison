@@ -1,4 +1,4 @@
-from Bio import Entrez # to access NCBIs Genebank database
+from Bio import Entrez # To access NCBIs Genebank database
 
 class BlastHit(object):
     '''
@@ -28,10 +28,10 @@ class BlastHit(object):
                 # ids and databank ids
                 num = n + 1
                 while num < len(ids):
-                    if len(ids[num]) >= 5: # very vague, it might be better to
-                        # have a list of potential dbs
+                    if len(ids[num]) >= 5: # Very vague, it might be better to
+                        # have a list of potential dbs.
                         self.ids.append(GeneId(ids[n], ids[num]))
-                        # -> every id is a list containing the database and
+                        # -> Every id is a list containing the database and
                         # the id itself
                         num += 1
                     else:
@@ -42,9 +42,9 @@ class BlastHit(object):
         self.score = hit[13]
         self.e_value = hit[10]
         # self.bit_score = hit[11] 
-        # -> problematic due to 12261 != 1.226e04. This can appear probably at
-        # many places but here i detected it taken out because very similar to
-        # e-value
+        # -> Problematic due to 12261 != 1.226e04.  This can appear probably
+        # at many places but here i detected it taken out because very similar
+        # to e-value
         self.identities = hit[14]
         self.positives = hit[15]
         self.gaps = hit[16]
@@ -56,7 +56,7 @@ class BlastHit(object):
         self.subject = hit[21]
         self.subject_start = hit[8]      
         self.status = ''
-        # states whether a similar BlastHit has been found in the other Search
+        # States whether a similar BlastHit has been found in the other Search
     
     def compareHit(self, other, check_ids=True):
         '''
@@ -73,8 +73,8 @@ class BlastHit(object):
         
         differences = []
         
-        #if self.bit_score != other.bit_score: #should be the same as score
-        #   return False, None                   # -> see above
+        #if self.bit_score != other.bit_score: # Should be the same as score
+        #   return False, None                 # -> see above
         if check_ids and not self.ids == other.ids:
             return False, None
         elif self.query_start != other.query_start:
@@ -87,26 +87,26 @@ class BlastHit(object):
             return False, None
         elif [letter for letter in self.query if letter in 'ACGT'] !=
              [letter for letter in other.query if letter in 'ACGT']:
-            # neccesary due to alignment differences like 'C-T' != 'CT-' which
-            # come from changes in alignment algorithm
+            # Neccesary due to alignment differences like 'C-T' != 'CT-' which
+            # come from changes in alignment algorithm.
             return False, None
         elif [letter for letter in self.subject if letter in 'ACGT'] !=
              [letter for letter in other.subject if letter in 'ACGT']:
             # see above "query"
             return False, None
         else:
-            # check for smaller differencens (these are database changes that
-            # do not directly change the hit. For example, when the database
+            # Check for smaller differencens (these are database changes that
+            # do not directly change the hit.  For example, when the database
             # becomes bigger, this make different (hit) cases more likely. The
             # reason why these are nevertheless checked is to clarify that
             # these are no perfect hits and therefore line by line comparison
             # would not find this (also, a slightly higher e-Value might lead
-            # to exclusion from the BLAST algorithm) 
+            # to exclusion from the BLAST algorithm).
             if self.e_value != other.e_value:
                 differences.append('eValue')
                 
-            # changes in alignment (due to internal changes in BLAST like
-            # "CTGC" and "CATC" as gapless alignment or "C-TGC" and "CAT-C")
+            # Changes in alignment (due to internal changes in BLAST like
+            # "CTGC" and "CATC" as gapless alignment or "C-TGC" and "CAT-C").
             if self.identities != other.identities or 
                self.query != other.query or
                self.subject != other.subject or
@@ -120,7 +120,7 @@ class BlastHit(object):
     def __str__(self):
         '''
         When a BLAST hit is called as a string return the orginal data and,
-        if specified, the status
+        if specified, the status.
         '''
         
         if self.status == '':
@@ -131,6 +131,7 @@ class BlastHit(object):
 class GeneId(object):
     '''
     Class that describes an ID as it is found in a certain database
+    
     db = Identifier of the database (eg. 'gb')
     num = identification number of the gene in the database
     '''
@@ -148,14 +149,14 @@ class GeneId(object):
     
 def compareBLASTs(blastA, blastB):
     '''
-    compare two lists of BlastHits. Returns two dictionaries that devide each
+    Compare two lists of BlastHits. Returns two dictionaries that devide each
     lists in the BlastHits that appear in both lists ('same'), that appear
     with slight changes (in description or eValue) in both lists ('similar')
     and the Hits that appear in only one list ('unknown')
     '''
     
     hitsA = {'same':[], 'similar':[], 'unknown':[], 'all':list(blastA)}
-    # -> the all list is inserted as copy to prevent overwriting
+    # -> The all list is inserted as copy to prevent overwriting
     hitsB = {'same':[], 'similar':[], 'unknown':[], 'all':list(blastB)}
     
     for hitA in blastA:
@@ -176,9 +177,9 @@ def compareBLASTs(blastA, blastB):
                     hitsB['same'].append(hitB)
                 blastB.pop(num)
                 break 
-                # NOTICE: this assumes that there is only one matching hit in
-                # the other BLAST Search. As long as only (description and)
-                # eValue count as possible differences this is acceptable
+                # NOTICE: This assumes that there is only one matching hit in
+                # the other BLAST Search.  As long as only (description and)
+                # e-value count as possible differences this is acceptable
                 # (because very unlikely since basically impossible) but might
                 # get problematic as soon as other properties are seen as
                 # optional
@@ -191,9 +192,9 @@ def compareBLASTs(blastA, blastB):
 
 def getIdList(hits, email):
     '''
-    for a given list of Genebank Ids, this function retruns (in form of a dict
+    For a given list of Genebank Ids, this function retruns (in form of a dict
     with ids as key) some basic data like creation and updating date,
-    description and whether the entree is still valid
+    description and whether the entree is still valid.
     
     hits = list of BlastHits
     email = Email Address (string) for accessing Entrez. They requiere this to
@@ -210,14 +211,14 @@ def getIdList(hits, email):
     
     # Access Entrez and download the basic info
     Entrez.email = email
-    # access the nucleotide database
-    # if you have another type of data (like protein) change the database name
+    # Access the nucleotide database
+    # If you have another type of data (like protein) change the database name
     handle = Entrez.esummary(db='nucleotide', id=','.join(ids))
     records = Entrez.read(handle)
     
     gene_summaries = {}
     
-    # the records can be accessed in the gene_summaries dictionary via their
+    # The records can be accessed in the gene_summaries dictionary via their
     # ids
     for record in records:
         gene_summaries[str(record['Gi'])] = record

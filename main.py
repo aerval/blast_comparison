@@ -18,23 +18,23 @@ import string # for valid letters in filename
 
 def loadBlastHits(file):
     '''
-    Read a tabular BLAST file into a list of BlastHits
+    Read a tabular BLAST file into a list of BlastHits.
     
     file = (string) filename of tabular blast result file
     '''
 
     blastfile = open(file).readlines()
     hits = []
-    # we can not extract every line from the tabular file into a single hit
+    # We can not extract every line from the tabular file into a single hit
     # since some correspont to multiple such hits
     for hit in blastfile:
         h = hit.split('\t')
         if h[1] == h[12]:
             hits.append(BlastHit(hit))
         else:
-            # when multiple gene ids contribute to the same alignment, they
-            # can be summarized to one hit. In the following we split these
-            # up because we want to check all hit seperately
+            # When multiple gene ids contribute to the same alignment, they
+            # can be summarized to one hit.  In the following we split these
+            # up because we want to check all hit seperately.
             subhits = h[12].split(';')
             for sub in subhits:
                 h[1] = sub
@@ -45,12 +45,12 @@ class CompareBLASTs(object):
     
     def __init__(self, old_hits, new_hits, email, name):
         '''
-        Initialize the comaprison object:
+        Initialize the comparison object.
         
         old_hits = List of BlastHits from the older BLAST Search
         new_hits = List of BlastHits from the newer, second BLAST Search
         email = Your email address, needed for use of NCBIs Enterez to prevent
-         misuse of their service
+        misuse of their service
         name = Query name that lead to the BlastHits to identify them later
         '''
     
@@ -62,25 +62,25 @@ class CompareBLASTs(object):
         
     def compare(self):
         '''
-        compares the two lists of BlastHits for more or less similar elements 
+        Compares the two lists of BlastHits for more or less similar elements 
         and extracts those elements form both lists that have no companion in
-        each other
+        each other.
         '''
         
-        # compare for exact (or similar) hits
+        # Compare for exact (or similar) hits.
         self.new_hits, self.old_hits = compareBLASTs(self.input_new_hits,
                                         self.input_old_hits)
         
-        # retrieve basic information of the coresponding genes for all old hits
+        # Retrieve basic information of the coresponding genes for all old hits.
         self.oldGeneIDs = getIdList(self.old_hits['all'], self.email)
         
-        # check all the old hits without a copy in the new hit list what
+        # Check all the old hits without a copy in the new hit list what
         # happend to their associated gene (whether it still exists, was
-        # updated (=replaced) or deleted (=suppressed)
+        # updated (=replaced) or deleted (=suppressed).
         oldOnly = {'live':[], 'replaced':[], 'suppressed':[]}
-        # a bit confusing: live and lost are handled here equivalent since a
+        # A bit confusing: live and lost are handled here equivalent since a
         # hit that is live (=still existing in the db) but not found in the
-        # new BLAST search was 'lost' at some point
+        # new BLAST search was 'lost' at some point.
         for hit in self.old_hits['unknown']:
             for ID in hit.ids:
                 if ID.db == 'gi':
@@ -88,13 +88,13 @@ class CompareBLASTs(object):
                     hit.status = self.oldGeneIDs[ID.num]['Status']
                     break
         
-        self.new_hits['replacement'] = [] # equivalent to old_hits 'replaced'
+        self.new_hits['replacement'] = [] # Equivalent to old_hits 'replaced'
         self.old_hits['lost'] = oldOnly['live']
         self.old_hits['suppressed'] = oldOnly['suppressed']
         self.old_hits['replacement'] = []
         
-        # check the old hits with a known replacement tag, wether a replacing
-        # hit can be found tín the new hits
+        # Check the old hits with a known replacement tag, wether a replacing
+        # hit can be found tín the new hits.
         for num, hit in enumerate(oldOnly['replaced']):
             for ID in hit.ids:
                 if ID.db == 'gi':
@@ -112,22 +112,22 @@ class CompareBLASTs(object):
                         found = True
                         break
             if not found:
-                # hit can be replaced but the replacement was nevertheless not
-                # found in the new Blast Search => lost/live
+                # Hit can be replaced but the replacement was nevertheless not
+                # found in the new Blast Search => lost/live.
                 self.old_hits['lost'].append(oldOnly['replaced'][num])
                 oldOnly['replaced'][num].status = 'live'
                 
-        # get the basic info for those hit in the new search, that have no
-        # know relative in the old search
+        # Get the basic info for those hit in the new search, that have no
+        # know relative in the old search.
         self.newGeneIDs = getIdList(self.new_hits['unknown'], self.email)
         
-        # estimate the time of the old BLAST (or last used database update) 
+        # Estimate the time of the old BLAST (or last used database update) 
         # search by looking for the creation of the youngest entree that match
-        # to the old hits
+        # to the old hits.
         date_oldsearch = max([strptime(record['CreateDate'], '%Y/%m/%d')
                                     for record in self.oldGeneIDs.values()])
 
-        # check wether all new hits with no relative in the old Search are
+        # Check wether all new hits with no relative in the old Search are
         # indeed new (there for created after the last of the old Hits). I
         # never had this case but one can never know ...
         self.new_hits['new'] = []
@@ -144,27 +144,27 @@ class CompareBLASTs(object):
     def outputComparison(self, output_types=[lambda x: print(x)], top=0,
                                         long_output=False, adaptive=True):
         '''
-        Prints (and or writes to a file) the output of the BLAST comparison
+        Prints (and or writes to a file) the output of the BLAST comparison.
         
         output_types = List of output lambdas like 'lambda x: print(x)' and 
         'lambda x: output_file.write(''.join([x, '\n']))'
         top = The number of Hits (from the top score) that are of interest for
         the comparion (0 = all)
-        long_output = longer, more describitive output
-        adaptive = in adaptive mode only those categories are displayed that 
+        long_output = A longer, more describitive output
+        adaptive = In adaptive mode only those categories are displayed that 
         appear like if there are no new hits in the second BLAST, this is not 
         dispalyed
         '''
         
-        # determine the number of hits (in the interested interval) that
-        # belong to each category
+        # Determine the number of hits (in the interested interval) that
+        # belong to each category.
         hits_per_category = {'equal' : 0, 'similar' : 0, 'live' : 0,
             'replaced' : 0, 'suppressed' : 0, 'new' : 0, 'strange' : 0}
         
-        if top == 0: #count all hits
+        if top == 0: # Count all hits
             top_old = len(self.old_hits['all'])
             top_new = len(self.new_hits['all'])
-        else: #count only the specified fraction of hits
+        else: # Count only the specified fraction of hits
             top_old = min(top, len(self.old_hits['all']))
             top_new = min(top, len(self.new_hits['all']))
        
@@ -193,10 +193,10 @@ class CompareBLASTs(object):
                 'new' : 'New Hits:\t%i',
                 'strange' : 'New appearing Hits:\t%i'}   
         
-        # for the different output channels (write to file or print)
+        # For the different output channels (write to file or print).
         for output in output_types:
             # Always print the query name as more than one query can be found 
-            # in a single BLAST
+            # in a single BLAST.
             if self.name:
                 output('Query:\t%s' % self.name)
                         
@@ -213,9 +213,9 @@ class CompareBLASTs(object):
             for key in ['equal', 'similar', 'live', 'replaced', 'suppressed',
                                                             'new', 'strange']:
                 if not adaptive or hits_per_category[key] > 0:
-                    # in (default) adaptive mode, only those hit categories 
+                    # In (default) adaptive mode, only those hit categories 
                     # are displayed that appear (example: if there is no 
-                    # replaced hit, the replaced hits column is not displayed
+                    # replaced hit, the replaced hits column is not displayed.
                     output(category_names[key] % hits_per_category[key])
                     
             # separate from following queries        
@@ -224,16 +224,16 @@ class CompareBLASTs(object):
     def export_hit_categories(self, categories, path=''):
         '''
         Exports the given categories into files (format similar to the input 
-        .blast format with a status column added at the end)
+        .blast format with a status column added at the end).
         
-        categories= string with comma ',' delimited categories (e.g: new, 
+        categories = String with comma ',' delimited categories (e.g: new, 
         all_old to export all new Hits and all the hits from the old search)
         path = file path to the exported files
         '''
         
         categories = categories.split(',')
         
-        # generate valid filenames:
+        # Generate valid filenames:
         valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
         name = ''.join(c for c in self.name if c in valid_chars)
         
@@ -259,8 +259,8 @@ class CompareBLASTs(object):
                 hits = self.new_hits['old']
             if hits:
                 with open(path + name + '_' + category + '.blast', 'w+') as f:
-                    # the query name and category speciefies the file name 
-                    # (e.g. Query7_all_new.blast)
+                    # The query name and category speciefies the file name 
+                    # (e.g. Query7_all_new.blast).
                     for hit in hits:
                         f.write(str(hit) + '\n')
             else:
@@ -276,12 +276,12 @@ def performComparison(opts):
     
     new_hits = {}
     old_hits = {}
-    # load the hits from the two input files
+    # Load the hits from the two input files.
     new_hits_all = loadBlastHits(opts.new_Blast)
     old_hits_all = loadBlastHits(opts.old_Blast)
     
-    # sort all hits for their repective query (as one BLAST file can contain 
-    # multiple queries
+    # Sort all hits for their repective query (as one BLAST file can contain 
+    # multiple queries.
     for hit in new_hits_all:
         if hit.name in new_hits.keys():
             new_hits[hit.name].append(hit)
@@ -294,19 +294,19 @@ def performComparison(opts):
         else:
             old_hits[hit.name] = [hit]
             
-    # make sure that both files where against the same queries
+    # Make sure that both files where against the same queries.
     assert old_hits.keys() == new_hits.keys()
     
-    # define how to output the (general) results (print to console and/or save 
-    # to file)
+    # Define how to output the (general) results (print to console and/or save 
+    # to file).
     output_types = []
     if opts.verbose:
         output_types.append(lambda x: print(x))
     if opts.save_output:
         output_file = open(opts.output_path + opts.save_output, 'w+')
         output_types.append(lambda x: output_file.write(''.join([x, '\n']))) 
-        # somewhat complicated expression because file.write does not
-        # automatically add a line end character
+        # Somewhat complicated expression because file.write does not
+        # automatically add a line end character.
     
     for key in old_hits.keys():
         blastComparison = CompareBLASTs(old_hits[key], new_hits[key], 
@@ -315,7 +315,7 @@ def performComparison(opts):
         blastComparison.outputComparison(output_types, opts.top, 
                                          opts.long_output, opts.adaptive)
         
-        # export specified hit categories to file
+        # Export specified hit categories to file.
         if opts.export:
             blastComparison.export_hit_categories(opts.export, 
                                                   path = opts.output_path)
@@ -325,7 +325,7 @@ def performComparison(opts):
 
 if __name__ == '__main__':
     
-    # general description of the program
+    # General description of the program
     usage = \
     '''
     %prog [options]
@@ -364,5 +364,5 @@ if __name__ == '__main__':
     
     assert opts.old_Blast and opts.new_Blast
     
-    # executes the analysing program
+    # Executes the analysing program
     performComparison(opts)
