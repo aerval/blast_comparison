@@ -13,7 +13,7 @@
 from __future__ import print_function
 from time import strptime # convert string into time object
 import optparse # commandline parsing
-from BlastHit import * # BlastHit.py file
+from blast_hit import * # BlastHit.py file
 import string # for valid letters in filename
 
 def loadBlastHits(file):
