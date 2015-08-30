@@ -8,6 +8,7 @@
 # by Philipp B. Rentzsch                     #
 # BCCDC Vancouver, BC                        #
 # October 2014 - January 2015                #
+# License: MIT                               #
 ##############################################
 
 from __future__ import print_function
