@@ -1,10 +1,11 @@
-from Bio import Entrez # To access NCBIs Genebank database
+from Bio import Entrez  # To access NCBIs Genebank database
+
 
 class BlastHit(object):
     '''
     Object that contains all data about a particular Hit
     '''
-    
+
     def __init__(self, hit):
         '''
         Notice: some of the properties included here do not appear in the
@@ -15,20 +16,20 @@ class BlastHit(object):
         properties (and further that this would mask hits with changes in the
         description as it is not included in the short tabular format).
         '''
-        
+
         self.raw = hit
         hit = hit.split('\t')
-        
+
         # Loop through the ID fields and extract the different IDs
         ids = hit[1].strip('|').split('|')
-        self.ids = []   
+        self.ids = []
         for n, i in enumerate(ids):
-            if len(i) < 5: 
+            if len(i) < 5:
                 # 5 is a relativly arbitrary number to distiguish between hit
                 # ids and databank ids
                 num = n + 1
                 while num < len(ids):
-                    if len(ids[num]) >= 5: # Very vague, it might be better to
+                    if len(ids[num]) >= 5:  # Very vague, it might be better to
                         # have a list of potential dbs.
                         self.ids.append(GeneId(ids[n], ids[num]))
                         # -> Every id is a list containing the database and
@@ -36,12 +37,12 @@ class BlastHit(object):
                         num += 1
                     else:
                         break
-        
+
         self.name = hit[0]
-        self.length =  hit[3]
+        self.length = hit[3]
         self.score = hit[13]
         self.e_value = hit[10]
-        # self.bit_score = hit[11] 
+        # self.bit_score = hit[11]
         # -> Problematic due to 12261 != 1.226e04.  This can appear probably
         # at many places but here i detected it taken out because very similar
         # to e-value
@@ -54,10 +55,10 @@ class BlastHit(object):
         self.query_start = hit[6]
         self.mismatch = hit[4]
         self.subject = hit[21]
-        self.subject_start = hit[8]      
+        self.subject_start = hit[8]
         self.status = ''
         # States whether a similar BlastHit has been found in the other Search
-    
+
     def compare_hit(self, other, check_ids=True):
         '''
         Returns true in those cases where only eValue (or description) may be
@@ -70,11 +71,11 @@ class BlastHit(object):
         also not the hit charateristics). Check_ids = True therefore checks
         for Ids as well while = False ignores it.
         '''
-        
+
         differences = []
-        
-        #if self.bit_score != other.bit_score: # Should be the same as score
-        #   return False, None                 # -> see above
+
+        # if self.bit_score != other.bit_score: # Should be the same as score
+        #    return False, None                 # -> see above
         if check_ids and not self.ids == other.ids:
             return False, None
         elif self.query_start != other.query_start:
