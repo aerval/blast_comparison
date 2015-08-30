@@ -11,7 +11,7 @@ class BlastHit(object):
         short tabular BLAST representation. If one would adapt the program to
         also work with that kind of data, all the properties of higher hit
         indices (from hit[13]?) would be exluded. Note that you would also
-        need to adjust compareHit function to only check the primary
+        need to adjust compare_hit function to only check the primary
         properties (and further that this would mask hits with changes in the
         description as it is not included in the short tabular format).
         '''
@@ -58,7 +58,7 @@ class BlastHit(object):
         self.status = ''
         # States whether a similar BlastHit has been found in the other Search
     
-    def compareHit(self, other, check_ids=True):
+    def compare_hit(self, other, check_ids=True):
         '''
         Returns true in those cases where only eValue (or description) may be
         deviating and every other stat is equal
@@ -147,7 +147,7 @@ class GeneId(object):
         
         return self.db == id2.db and self.num == id2.num
     
-def compareBLASTs(blastA, blastB):
+def compare_blasts(blastA, blastB):
     '''
     Compare two lists of BlastHits. Returns two dictionaries that devide each
     lists in the BlastHits that appear in both lists ('same'), that appear
@@ -162,7 +162,7 @@ def compareBLASTs(blastA, blastB):
     for hitA in blastA:
         found = False
         for num, hitB in enumerate(blastB):
-            same, differences = hitA.compareHit(hitB)
+            same, differences = hitA.compare_hit(hitB)
             if same:
                 found = True
                 if len(differences) > 0:
@@ -190,7 +190,7 @@ def compareBLASTs(blastA, blastB):
     
     return hitsA, hitsB
 
-def getIdList(hits, email):
+def get_idlist(hits, email):
     '''
     For a given list of Genebank Ids, this function retruns (in form of a dict
     with ids as key) some basic data like creation and updating date,

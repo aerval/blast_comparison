@@ -16,7 +16,7 @@ import optparse # commandline parsing
 from blast_hit import * # BlastHit.py file
 import string # for valid letters in filename
 
-def loadBlastHits(file):
+def load_blasthits(file):
     '''
     Read a tabular BLAST file into a list of BlastHits.
     
@@ -68,11 +68,11 @@ class CompareBLASTs(object):
         '''
         
         # Compare for exact (or similar) hits.
-        self.new_hits, self.old_hits = compareBLASTs(self.input_new_hits,
+        self.new_hits, self.old_hits = compare_blasts(self.input_new_hits,
                                         self.input_old_hits)
         
         # Retrieve basic information of the coresponding genes for all old hits.
-        self.oldGeneIDs = getIdList(self.old_hits['all'], self.email)
+        self.oldGeneIDs = get_idlist(self.old_hits['all'], self.email)
         
         # Check all the old hits without a copy in the new hit list what
         # happend to their associated gene (whether it still exists, was
@@ -102,7 +102,7 @@ class CompareBLASTs(object):
             found = False
             for num2, hit2 in enumerate(self.new_hits['unknown']):
                 if new_id in [ID.num for ID in hit2.ids]:
-                    same, differences = hit.compareHit(hit2, check_ids=False)
+                    same, differences = hit.compare_hit(hit2, check_ids=False)
                     if same:
                         rep = self.new_hits['unknown'].pop(num2)
                         rep.status = 'replacement'
@@ -119,7 +119,7 @@ class CompareBLASTs(object):
                 
         # Get the basic info for those hit in the new search, that have no
         # know relative in the old search.
-        self.newGeneIDs = getIdList(self.new_hits['unknown'], self.email)
+        self.newGeneIDs = get_idlist(self.new_hits['unknown'], self.email)
         
         # Estimate the time of the old BLAST (or last used database update) 
         # search by looking for the creation of the youngest entree that match
@@ -141,7 +141,7 @@ class CompareBLASTs(object):
                 self.new_hits['new'].append(hit)
                 hit.status = 'new'
     
-    def outputComparison(self, output_types=[lambda x: print(x)], top=0,
+    def output_comparison(self, output_types=[lambda x: print(x)], top=0,
                                         long_output=False, adaptive=True):
         '''
         Prints (and or writes to a file) the output of the BLAST comparison.
@@ -266,7 +266,7 @@ class CompareBLASTs(object):
             else:
                 print("Unknown export category %s" % category)
 
-def performComparison(opts):
+def perform_comparison(opts):
     '''
     The main function that compares two BLAST files against the same Query
     Sequence
@@ -277,8 +277,8 @@ def performComparison(opts):
     new_hits = {}
     old_hits = {}
     # Load the hits from the two input files.
-    new_hits_all = loadBlastHits(opts.new_Blast)
-    old_hits_all = loadBlastHits(opts.old_Blast)
+    new_hits_all = load_blasthits(opts.new_Blast)
+    old_hits_all = load_blasthits(opts.old_Blast)
     
     # Sort all hits for their repective query (as one BLAST file can contain 
     # multiple queries.
@@ -312,7 +312,7 @@ def performComparison(opts):
         blastComparison = CompareBLASTs(old_hits[key], new_hits[key], 
                                         opts.email, key)
         blastComparison.compare()
-        blastComparison.outputComparison(output_types, opts.top, 
+        blastComparison.output_comparison(output_types, opts.top, 
                                          opts.long_output, opts.adaptive)
         
         # Export specified hit categories to file.
@@ -365,4 +365,4 @@ if __name__ == '__main__':
     assert opts.old_Blast and opts.new_Blast
     
     # Executes the analysing program
-    performComparison(opts)
+    perform_comparison(opts)
