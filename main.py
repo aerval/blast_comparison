@@ -96,8 +96,8 @@ class CompareBLASTs(object):
         self.old_hits['suppressed'] = oldOnly['suppressed']
         self.old_hits['replacement'] = []
 
-        # Check the old hits with a known replacement tag, wether a replacing
-        # hit can be found tín the new hits.
+        # Check the old hits with a known replacement tag, whether a replacing
+        # hit can be found within the new hits.
         for num, hit in enumerate(oldOnly['replaced']):
             for ID in hit.ids:
                 if ID.db == 'gi':

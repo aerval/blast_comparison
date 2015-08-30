@@ -86,12 +86,12 @@ class BlastHit(object):
             return False, None
         elif self.sframe != other.sframe:
             return False, None
-        elif [letter for letter in self.query if letter in 'ACGT'] !=
+        elif [letter for letter in self.query if letter in 'ACGT'] != \
              [letter for letter in other.query if letter in 'ACGT']:
             # Neccesary due to alignment differences like 'C-T' != 'CT-' which
             # come from changes in alignment algorithm.
             return False, None
-        elif [letter for letter in self.subject if letter in 'ACGT'] !=
+        elif [letter for letter in self.subject if letter in 'ACGT'] != \
              [letter for letter in other.subject if letter in 'ACGT']:
             # see above "query"
             return False, None
@@ -108,12 +108,12 @@ class BlastHit(object):
                 
             # Changes in alignment (due to internal changes in BLAST like
             # "CTGC" and "CATC" as gapless alignment or "C-TGC" and "CAT-C").
-            if self.identities != other.identities or 
-               self.query != other.query or
-               self.subject != other.subject or
-               self.score != other.score or
-               self.positives != other.positives or
-               self.gaps != other.gaps or
+            if self.identities != other.identities or \
+               self.query != other.query or \
+               self.subject != other.subject or \
+               self.score != other.score or \
+               self.positives != other.positives or \
+               self.gaps != other.gaps or \
                self.mismatch != other.mismatch:
                 differences.append('alignment')
         return True, differences
